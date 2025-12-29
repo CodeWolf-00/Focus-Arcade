@@ -12,6 +12,35 @@ const reset = document.getElementById("reset"); // optional: keep for dev
 
 let progress = Number(localStorage.getItem(PROGRESS_KEY) || "0");
 
+const toast = document.getElementById("toast");
+
+// tiny inline beep (no audio file needed)
+function playDing() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.value = 880;
+    g.gain.value = 0.06;
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.08);
+    o.onended = () => ctx.close();
+  } catch {}
+}
+
+function showToast(msg) {
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.remove("pop");
+  // reflow to restart animation
+  void toast.offsetWidth;
+  toast.classList.add("pop");
+}
+
 function getUsedTokens() {
   try {
     return JSON.parse(localStorage.getItem(USED_TOKENS_KEY) || "[]");
@@ -34,7 +63,9 @@ function addOne() {
   progress = Math.min(GOAL, progress + 1);
   localStorage.setItem(PROGRESS_KEY, String(progress));
   render();
-  // TODO later: sound + animation hook
+
+  playDing();
+  showToast("+1 Focus XP");
 }
 
 function resetAll() {
@@ -55,10 +86,12 @@ function redeemTokenOnce(token) {
   if (!token) return false;
 
   const used = new Set(getUsedTokens());
-  if (used.has(token)) return false; // already redeemed on this device/browser
+  if (used.has(token)) return false;
 
   // Redeem
   addOne();
+  showToast(`Redeemed token: ${token}`);
+
   used.add(token);
   setUsedTokens([...used]);
   return true;
