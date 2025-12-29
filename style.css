@@ -16,3 +16,13 @@ button.secondary { opacity:.7; }
   60%  { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
+
+.fill.bump {
+  animation: bump 220ms ease-out;
+}
+
+@keyframes bump {
+  0%   { transform: scaleY(0.85); }
+  60%  { transform: scaleY(1.12); }
+  100% { transform: scaleY(1); }
+}

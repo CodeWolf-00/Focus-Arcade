@@ -14,6 +14,54 @@ let progress = Number(localStorage.getItem(PROGRESS_KEY) || "0");
 
 const toast = document.getElementById("toast");
 
+let audioCtx = null;
+let audioUnlocked = false;
+
+function ensureAudioUnlocked() {
+  if (audioUnlocked) return true;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = audioCtx || new AudioCtx();
+
+    // Some browsers require resume() after a gesture
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    audioUnlocked = true;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const enableSoundBtn = document.getElementById("enableSound");
+if (enableSoundBtn) {
+  enableSoundBtn.addEventListener("click", () => {
+    ensureAudioUnlocked();
+    showToast("Sound enabled");
+    playDing();
+  });
+}
+
+function playDing() {
+  if (!ensureAudioUnlocked()) return;
+
+  // If still suspended, don’t throw—just skip
+  if (!audioCtx || audioCtx.state !== "running") return;
+
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = "sine";
+  o.frequency.value = 880;
+  g.gain.value = 0.06;
+
+  o.connect(g);
+  g.connect(audioCtx.destination);
+
+  o.start();
+  o.stop(audioCtx.currentTime + 0.08);
+}
+
 // tiny inline beep (no audio file needed)
 function playDing() {
   try {
@@ -63,6 +111,26 @@ function addOne() {
   progress = Math.min(GOAL, progress + 1);
   localStorage.setItem(PROGRESS_KEY, String(progress));
   render();
+  
+function replayAnimation(el, className) {
+  if (!el) return;
+  el.classList.remove(className);
+  void el.offsetWidth;
+  el.classList.add(className);
+}
+
+replayAnimation(toast, "pop");
+replayAnimation(fill, "bump");
+
+function addOne() {
+  progress = Math.min(GOAL, progress + 1);
+  localStorage.setItem(PROGRESS_KEY, String(progress));
+  render();
+
+  replayAnimation(fill, "bump");
+  showToast("+1 Focus XP");
+  playDing();
+}
 
   playDing();
   showToast("+1 Focus XP");
