@@ -34,6 +34,84 @@ function ensureAudioUnlocked() {
   }
 }
 
+const KEYS = {
+  gif: "fa_gif_dataurl",
+  audio: "fa_audio_dataurl",
+  trigger: "fa_last_trigger",
+};
+
+const bc = ("BroadcastChannel" in window) ? new BroadcastChannel("focus-arcade") : null;
+
+const $ = (id) => document.getElementById(id);
+
+const gifInput = $("gifInput");
+const audioInput = $("audioInput");
+const gifPreview = $("gifPreview");
+const audioPreview = $("audioPreview");
+const saveBtn = $("saveBtn");
+const triggerBtn = $("triggerBtn");
+const messageInput = $("messageInput");
+const durationInput = $("durationInput");
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onerror = () => reject(new Error("read failed"));
+    r.onload = () => resolve(r.result);
+    r.readAsDataURL(file);
+  });
+}
+
+function loadSaved() {
+  const gif = localStorage.getItem(KEYS.gif);
+  const aud = localStorage.getItem(KEYS.audio);
+  if (gif && gifPreview) gifPreview.src = gif;
+  if (aud && audioPreview) audioPreview.src = aud;
+}
+
+async function saveLoadout() {
+  const gifFile = gifInput?.files?.[0] || null;
+  const audFile = audioInput?.files?.[0] || null;
+
+  // keep existing if not re-uploaded
+  let gif = localStorage.getItem(KEYS.gif);
+  let aud = localStorage.getItem(KEYS.audio);
+
+  if (gifFile) gif = await fileToDataUrl(gifFile);
+  if (audFile) aud = await fileToDataUrl(audFile);
+
+  if (!gif && !aud) {
+    alert("Upload a GIF or audio first.");
+    return;
+  }
+
+  if (gif) localStorage.setItem(KEYS.gif, gif);
+  if (aud) localStorage.setItem(KEYS.audio, aud);
+
+  loadSaved();
+  bc?.postMessage({ type: "ASSETS_UPDATED", at: Date.now() });
+}
+
+function trigger() {
+  const duration = Math.max(1, Math.min(30, Number(durationInput?.value || 4)));
+  const message = (messageInput?.value || "").trim();
+
+  const payload = {
+    type: "TRIGGER",
+    at: Date.now(),
+    durationMs: duration * 1000,
+    message,
+  };
+
+  bc?.postMessage(payload);
+  localStorage.setItem(KEYS.trigger, JSON.stringify(payload));
+}
+
+saveBtn?.addEventListener("click", saveLoadout);
+triggerBtn?.addEventListener("click", trigger);
+
+loadSaved();
+
 const enableSoundBtn = document.getElementById("enableSound");
 if (enableSoundBtn) {
   enableSoundBtn.addEventListener("click", () => {

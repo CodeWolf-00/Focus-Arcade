@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Focus Arcade — Display</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body class="display">
+  <main class="stage">
+    <div id="overlay" class="overlay" hidden>
+      <img id="gif" class="stage-gif" alt="Celebration" />
+      <div id="msg" class="stage-msg"></div>
+    </div>
+
+    <div class="idle">
+      <div class="idle-title">Focus Arcade</div>
+      <div class="idle-sub">Waiting for trigger…</div>
+      <div class="idle-sub small">Tip: click once to enable audio</div>
+    </div>
+
+    <audio id="audio" preload="auto"></audio>
+  </main>
+
+  <script src="./display.js"></script>
+</body>
+</html>
