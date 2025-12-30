@@ -18,11 +18,16 @@ function loadAssets() {
   const gif = localStorage.getItem(KEYS.gif);
   const aud = localStorage.getItem(KEYS.audio);
 
-  if (gif) gifEl.src = gif; else gifEl.removeAttribute("src");
-  if (aud) audioEl.src = aud; else audioEl.removeAttribute("src");
+  if (gif) gifEl.src = gif;
+  else gifEl.removeAttribute("src");
+
+  if (aud) audioEl.src = aud;
+  else audioEl.removeAttribute("src");
 }
 
-async function play({ durationMs = 4000, message = "" } = {}) {
+async function play(trigger = {}) {
+  const { durationMs = 4000, message = "" } = trigger;
+
   loadAssets();
 
   overlay.hidden = false;
@@ -44,7 +49,7 @@ async function play({ durationMs = 4000, message = "" } = {}) {
       await audioEl.play();
     }
   } catch {
-    // normal autoplay restriction
+    // autoplay restrictions are normal
   }
 
   if (hideTimer) clearTimeout(hideTimer);
@@ -54,18 +59,19 @@ async function play({ durationMs = 4000, message = "" } = {}) {
   }, durationMs);
 }
 
-// Listen from controller tab
 bc?.addEventListener("message", (ev) => {
   const m = ev.data;
   if (!m?.type) return;
+
   if (m.type === "TRIGGER") play(m);
   if (m.type === "ASSETS_UPDATED") loadAssets();
 });
 
-// Fallback polling (works even if BroadcastChannel is weird)
+// fallback polling
 setInterval(() => {
   const raw = localStorage.getItem(KEYS.trigger);
   if (!raw) return;
+
   try {
     const t = JSON.parse(raw);
     if (t?.at && t.at > lastTriggerAt) {
@@ -75,7 +81,7 @@ setInterval(() => {
   } catch {}
 }, 500);
 
-// Unlock audio on first click
+// unlock audio on first click
 window.addEventListener("click", async () => {
   try {
     if (audioEl.src) await audioEl.play();

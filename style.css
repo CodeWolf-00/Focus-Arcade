@@ -1,47 +1,19 @@
-body { font-family: system-ui, sans-serif; display:flex; justify-content:center; padding:24px; }
-.card { width:min(520px, 100%); padding:20px; border:1px solid #ddd; border-radius:16px; }
-.bar { height:18px; background:#eee; border-radius:999px; overflow:hidden; margin:16px 0 8px; }
-.fill { height:100%; width:0%; background:#111; transition: width 250ms ease; }
-button { padding:10px 14px; border-radius:10px; border:1px solid #ccc; background:#fff; margin-right:8px; }
-button.secondary { opacity:.7; }
+body.controller { font-family: system-ui, sans-serif; display:flex; justify-content:center; padding:24px; }
+.header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.link { font-size: 14px; opacity: .8; text-decoration: none; }
+.link:hover { opacity: 1; text-decoration: underline; }
 
-.toast { min-height: 1.4em; opacity: 0.9; margin: 8px 0 14px; }
+.section { margin-top: 18px; }
+.h2 { font-size: 14px; margin: 0 0 10px; opacity: .85; }
 
-.pop {
-  animation: pop 220ms ease-out;
-}
+.row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+.grid2 { display:grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 720px) { .grid2 { grid-template-columns: 1fr 1fr; } }
 
-@keyframes pop {
-  0%   { transform: scale(0.96); }
-  60%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
-}
+.box input { width: 100%; }
+.preview { margin-top: 8px; min-height: 80px; display:flex; align-items:center; justify-content:center; border: 1px dashed #ddd; border-radius: 12px; padding: 10px; }
+.preview img { max-width: 100%; max-height: 160px; }
+.preview audio { width: 100%; }
 
-.fill.bump {
-  animation: bump 220ms ease-out;
-}
-
-@keyframes bump {
-  0%   { transform: scaleY(0.85); }
-  60%  { transform: scaleY(1.12); }
-  100% { transform: scaleY(1); }
-}
-
-.toast{
-  min-height: 1.4em;
-  margin: 8px 0 14px;
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #f7f7f7;
-}
-
-.toast.pop{
-  animation: pop 220ms ease-out;
-}
-
-@keyframes pop{
-  0%   { transform: scale(0.96); }
-  60%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
-}
+/* display classes are in your existing CSS if you added them earlier;
+   if not, you can keep your display.css styles too. */

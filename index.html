@@ -1,43 +1,74 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Focus Arcade</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
-<body>
+
+<body class="controller">
   <main class="card">
-    <h1>Focus Arcade - LIVE</h1>
+    <header class="header">
+      <h1>Focus Arcade - LIVE</h1>
+      <a class="link" href="./display.html" target="_blank" rel="noopener">Open Display</a>
+    </header>
 
-    <div class="bar">
-      <div id="fill" class="fill"></div>
-    </div>
-    <p id="label">Level 0 / 10</p>
-    <p id="toast" class="toast"></p>
+    <!-- Progress UI -->
+    <section class="section">
+      <div class="bar">
+        <div id="fill" class="fill"></div>
+      </div>
+      <p id="label">Level 0 / 10</p>
+      <p id="toast" class="toast" aria-live="polite"></p>
 
-    <button id="enableSound" class="secondary">Enable sound</button>
+      <div class="row">
+        <button id="enableSound" class="secondary">Enable sound</button>
+        <button id="tap">Simulate +1</button>
+        <button id="reset" class="secondary">Reset</button>
+      </div>
+    </section>
 
-    <button id="tap">Simulate +1</button>
-    <button id="reset" class="secondary">Reset</button>
+    <!-- Media Loadout -->
+    <section class="section">
+      <h2 class="h2">Celebration Loadout</h2>
+
+      <div class="grid2">
+        <div class="box">
+          <label class="label">GIF</label>
+          <input id="gifInput" type="file" accept="image/gif,image/*" />
+          <div class="preview">
+            <img id="gifPreview" alt="GIF preview" />
+          </div>
+        </div>
+
+        <div class="box">
+          <label class="label">Audio</label>
+          <input id="audioInput" type="file" accept="audio/*" />
+          <div class="preview">
+            <audio id="audioPreview" controls></audio>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="box">
+          <label class="label">Message (optional)</label>
+          <input id="messageInput" placeholder="Level up +1 (optional)" />
+        </div>
+        <div class="box">
+          <label class="label">Duration (seconds)</label>
+          <input id="durationInput" type="number" min="1" max="30" value="4" />
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="saveBtn" class="secondary">Save Loadout</button>
+        <button id="triggerBtn">Trigger Celebration</button>
+      </div>
+    </section>
   </main>
 
-  <script src="app.js"></script>
-  
-<a href="./display.html" target="_blank" rel="noopener">Open Display</a>
-
-<input id="gifInput" type="file" accept="image/gif,image/*" />
-<input id="audioInput" type="file" accept="audio/*" />
-
-<img id="gifPreview" alt="GIF preview" />
-<audio id="audioPreview" controls></audio>
-
-<button id="saveBtn">Save Loadout</button>
-<button id="triggerBtn">Trigger Celebration</button>
-
-<input id="messageInput" placeholder="Level up +1 (optional)" />
-<input id="durationInput" type="number" min="1" max="30" value="4" />
-
-
+  <script src="./app.js"></script>
 </body>
 </html>
